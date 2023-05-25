@@ -24,20 +24,27 @@ function determineTopFiveNumbers(fileContents) {
   return topFiveNumbers
 }
 
-function fileSubmit(event) {
+function fileChanged(event) {
   event.preventDefault();
 
   // Retrieve file contents
-  const fileInputElement = document.getElementById("numbersFileInput")
+  const fileInputElement = event.target
+
+  // Use textare for output
+  const textareaElement = document.getElementById("resultTextArea")
+
   const fileContents = fileInputElement.files[0].text().then((fileContents) => {
     // Get top five numbers
     const topFiveNumbers = determineTopFiveNumbers(fileContents) 
     
     // Write results to textarea
-    const textareaElement = document.getElementById("resultTextArea")
     textareaElement.value = topFiveNumbers.join("\n")
+
+  }).catch((error) => {
+    // Write error message for issues with file access or similar
+    textareaElement.value = error.message
   })
 }
 
-const fileSubmitForm = document.getElementById("file-submit");
-fileSubmitForm.addEventListener("submit", fileSubmit);
+const fileInputElement = document.getElementById("numbersFileInput");
+fileInputElement.addEventListener("input", fileChanged);
